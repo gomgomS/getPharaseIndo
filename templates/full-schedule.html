@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <style>
+        body{
+            margin-top:20px;
+        }
+        .bg-light-gray {
+            background-color: #f7f7f7;
+        }
+        .table-bordered thead td, .table-bordered thead th {
+            border-bottom-width: 2px;
+        }
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .table-bordered td, .table-bordered th {
+            border: 1px solid #dee2e6;
+        }
+
+
+        .bg-sky.box-shadow {
+            box-shadow: 0px 5px 0px 0px #00a2a7
+        }
+
+        .bg-orange.box-shadow {
+            box-shadow: 0px 5px 0px 0px #af4305
+        }
+
+        .bg-green.box-shadow {
+            box-shadow: 0px 5px 0px 0px #4ca520
+        }
+
+        .bg-yellow.box-shadow {
+            box-shadow: 0px 5px 0px 0px #dcbf02
+        }
+
+        .bg-pink.box-shadow {
+            box-shadow: 0px 5px 0px 0px #e82d8b
+        }
+
+        .bg-purple.box-shadow {
+            box-shadow: 0px 5px 0px 0px #8343e8
+        }
+
+        .bg-lightred.box-shadow {
+            box-shadow: 0px 5px 0px 0px #d84213
+        }
+
+
+        .bg-sky {
+            background-color: #02c2c7
+        }
+
+        .bg-orange {
+            background-color: #e95601
+        }
+
+        .bg-green {
+            background-color: #5bbd2a
+        }
+
+        .bg-yellow {
+            background-color: #f0d001
+        }
+
+        .bg-pink {
+            background-color: #ff48a4
+        }
+
+        .bg-purple {
+            background-color: #9d60ff
+        }
+
+        .bg-lightred {
+            background-color: #ff5722
+        }
+
+        .padding-15px-lr {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        .padding-5px-tb {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .margin-10px-bottom {
+            margin-bottom: 10px;
+        }
+        .border-radius-5 {
+            border-radius: 5px;
+        }
+
+        .margin-10px-top {
+            margin-top: 10px;
+        }
+        .font-size14 {
+            font-size: 14px;
+        }
+
+        .text-light-gray {
+            color: #d6d5d5;
+        }
+        .font-size13 {
+            font-size: 13px;
+        }
+
+        .table-bordered td, .table-bordered th {
+            border: 1px solid #dee2e6;
+        }
+        .table td, .table th {
+            padding: .75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+        }
+
+    </style>
+</head>
+<body>
+   <!-- {{ALL_DATA}} -->
+    <section id="cover" class="min-vh-100 mt-10">
+        <div id="cover-caption">
+            <div class="container">
+                <div class="container">
+                    <div class="timetable-img text-center">
+                        <img src="img/content/timetable.png" alt="">
+                    </div>
+                    <div class="table-responsive">
+                        
+                        <table class="table table-bordered text-center">
+                            <thead>
+                                <tr class="bg-light-gray">
+                                    <th class="text-uppercase">Time
+                                    </th>
+                                    <th class="text-uppercase">Monday</th>
+                                    <th class="text-uppercase">Monday</th>
+                                    <th class="text-uppercase">Tuesday</th>
+                                    <th class="text-uppercase">Wednesday</th>
+                                    <th class="text-uppercase">Thursday</th>
+                                    <th class="text-uppercase">Friday</th>
+                                    <th class="text-uppercase">Saturday</th>
+                                </tr>
+                            </thead>
+                            {%for data in ALL_DATA%}
+                            <tbody>
+                                <tr>                
+                                    {%for data_2 in data%}        
+                                    <td>
+                                    
+                                        {%if data_2[-2:] == '00'%}
+
+                                            <span>{{data_2}}</span>
+
+                                        {%elif data_2 == ''%}
+
+                                            <span></span>
+
+                                        {%else%}
+
+                                        
+                                        <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">{{data_2[1]}}</span>
+                                        <div class="margin-10px-top font-size14">{{data_2[2]}}</div>
+                                        <div class="font-size13 text-dark-gray">{{data_2[3]}} by: {{data_2[4]}}</div>
+                                        {%endif%}
+                                    </td>                                    
+                                    {%endfor%}                                                                                      
+                                </tr>                                                                                                                                                     
+                            </tbody>
+                            {%endfor%}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+      
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    
+
+</body>
+</html>
+

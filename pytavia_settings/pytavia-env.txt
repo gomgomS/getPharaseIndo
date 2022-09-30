@@ -1,0 +1,49 @@
+# IF YOU DONT HAVE PIP INSTALLED 
+wget https://bootstrap.pypa.io/get-pip.py
+python36  get-pip.py
+python2.7 get-pip.py
+
+# USEFUL LIBRARIES
+
+pip3 install flask-socketio
+pip3 install cerberus
+pip3 install elasticsearch
+pip3 install boto
+pip3 install pystmark
+pip3 install cheetah
+pip3 install pymongo
+pip3 install cherrypy
+pip3 install flask
+pip3 install flask_wtf
+pip3 install twilio
+pip3 install nexmo
+pip3 install pillow
+pip3 install py4j
+pip3 install crc16
+pip3 install pdfkit
+pip3 install Delorean
+pip3 install Mongothon
+pip3 install openpyxl
+pip3 install streaming_form_data
+pip3 install python-firebase
+pip3 install captcha
+pip3 install xmltodict
+pip3 install pyfcm
+pip3 install pysftp
+pip3 install PyPDF2
+pip3 install Flask-SSLify
+
+# ML LIBRARIES
+pip3 install jupyter
+pip3 install numpy 
+pip3 install scipy  
+pip3 install matplotlib  
+pip3 install pandas  
+pip3 install scikit-learn   
+pip3 install statsmodels    
+pip3 install seaborn     
+pip3 install bokeh     
+pip3 install blaze     
+pip3 install scrapy     
+pip3 install sympy     
+pip3 install requests    
