@@ -48,7 +48,7 @@ class view_content:
         )
         data = params
 
-        content = data.get('menu_value')
+        content = data.get('kboom')
         
         if content == 'MANAGE_CONTENT':
             launcher_content = 'manage_content.html'
@@ -63,7 +63,7 @@ class view_content:
             launcher_content = 'list_live_content.html'
             manage_content_view     = self.mgdDB.db_content_management.find(
                 {
-                    "status": {"$not":{"$regex":"DEACTIVE"}},
+                    "status": {"$not":{"$reg ":"DEACTIVE"}},
                     "status_content": 'live'
                 }
             )   
@@ -77,6 +77,15 @@ class view_content:
                 }
             ) 
             ALL_DATA     = list( manage_content_view )
+        elif content == 'UPLOAD_RAW':
+            launcher_content = 'manage_video/upload_raw.html'            
+            # manage_content_view     = self.mgdDB.db_content_management.find(
+            #     {
+            #         "status": {"$not":{"$regex":"DEACTIVE"}},
+            #         "status_content": 'expired'
+            #     }
+            # ) 
+            ALL_DATA     = []
         else:
             launcher_content = 'view_content.html'
             ALL_DATA = []

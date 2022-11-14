@@ -61,13 +61,6 @@
         <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
             <div class="position-sticky">
                 <div class="list-group list-group-flush mx-3 mt-4">
-                    <!-- Collapse 1 -->
-                    <!-- <a class="list-group-item list-group-item-action py-2 ripple" aria-current="true"
-                        data-mdb-toggle="collapse" href="#collapseExample1" aria-expanded="true"
-                        aria-controls="collapseExample1">
-                        <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Expanded menu</span>
-                    </a> -->
-                    <!-- Collapsed content -->
                     <ul id="collapseExample1" class="collapse show list-group list-group-flush">
                         <li class="list-group-item py-1">
                             <a href="what?kboom=MANAGE_CONTENT" class="text-reset">PENGELOLAAN CONTENT</a>
@@ -80,30 +73,6 @@
                                 TAYANG</a>
                         </li>
                     </ul>
-                    <!-- Collapse 1 -->
-
-                    <!-- Collapse 2 -->
-                    <!-- <a class="list-group-item list-group-item-action py-2 ripple" aria-current="true"
-                        data-mdb-toggle="collapse" href="#collapseExample2" aria-expanded="true"
-                        aria-controls="collapseExample2">
-                        <i class="fas fa-chart-area fa-fw me-3"></i><span>Collapsed menu</span>
-                    </a> -->
-                    <!-- Collapsed content -->
-                    <!-- <ul id="collapseExample2" class="collapse list-group list-group-flush">
-                        <li class="list-group-item py-1">
-                            <a href="" class="text-reset">Link</a>
-                        </li>
-                        <li class="list-group-item py-1">
-                            <a href="" class="text-reset">Link</a>
-                        </li>
-                        <li class="list-group-item py-1">
-                            <a href="" class="text-reset">Link</a>
-                        </li>
-                        <li class="list-group-item py-1">
-                            <a href="" class="text-reset">Link</a>
-                        </li>
-                    </ul> -->
-                    <!-- Collapse 2 -->
                 </div>
             </div>
         </nav>
@@ -127,12 +96,6 @@
                     </span>
                     <span>Management Content System</span>
                 </a>
-                <!-- Search form -->
-                <!-- <form class="d-none d-md-flex input-group w-auto my-auto">
-                    <input autocomplete="off" type="search" class="form-control rounded"
-                        placeholder='Search (ctrl + "/" to focus)' style="min-width: 225px;" />
-                    <span class="input-group-text border-0"><i class="fas fa-search"></i></span>
-                </form> -->
 
                 <!-- Right links -->
                 <ul class="navbar-nav ms-auto d-flex flex-row">
@@ -155,46 +118,12 @@
     <!--Main layout-->
     <main style="margin-top: 58px;">
         <div class="container pt-4">LIST END CONTENT</div>
-        <div class="list-content-part m-4">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Content</th>
-                        <th scope="col">Date Publish</th>
-                        <th scope="col">Date End Publish</th>
-                        <th scope="col">Status Content</th>                        
-                        <!-- <th> action </th> -->
-                    </tr>
-                </thead>
-                <tbody>
-                    {%for data in ALL_DATA %}
-                    <tr>
-                        <th scope="row"></th>
-                        <td>{{data['title']}}</td>
-                        <td>
-                            <span class="d-inline-block text-truncate"
-                                style="max-width: 150px;">{{data['content']}}</span>
-                        </td>
-                        <td>{{data['start_date']}}</td>
-                        <td>{{data['end_date']}}</td>
-                        <td>{{data['status_content']}}</td>
-                        <!-- <td>
-                            <form action="/change-status-live-content" method="POST">
-                                <input type="hidden" class="form-control" value="{{data['pkey']}}" name="change-status">
-                                <input type="submit" value="LIVE CONTENT">
-                            </form>
-
-                            <form action="/delete" method="POST">
-                                <input type="hidden" class="form-control" value="{{data['pkey']}}" name="delete">
-                                <input type="submit" value="DELETE">
-                            </form>
-                        </td> -->
-                    </tr>
-                    {%endfor%}
-                </tbody>
-            </table>
+        <div class="list-content-part m-4"> 
+            <form action="/split_raw_phrase" method="POST" enctype="multipart/form-data">
+                <input type="file" name="subtitle" />
+                <input type="file" name="movie" />
+                <input type="submit" />
+            </form>
         </div>
     </main>
     <!--Main layout-->

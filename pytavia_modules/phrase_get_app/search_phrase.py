@@ -43,7 +43,19 @@ class search_phrase:
     def search(self, params):
         ALL_DATA     = 'haii'
         
-        manage_content_view  = self.mgdDB.db_scripts.find({},{'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1})             
+        self.webapp.logger.debug( params )
+
+        if params.get('search-keyword') is None:
+            manage_content_view  = self.mgdDB.db_scripts.find({},{'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1})
+        else:
+            self.webapp.logger.debug( "BELUM" )
+            search_keyword = params['search-keyword']
+            self.webapp.logger.debug( search_keyword)
+            manage_content_view  = self.mgdDB.db_scripts.find({'$text':{'$search':search_keyword}},
+                                        {'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1}).sort([("startTime", pymongo.ASCENDING)])
+            
+            self.webapp.logger.debug("333333333333333333333333")
+        # s elf.webapp.logger.debug(list(manage_content_view))
         ALL_DATA     = list( manage_content_view )
 
         response = render_template(

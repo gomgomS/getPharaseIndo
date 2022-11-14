@@ -4,7 +4,6 @@ import pymongo
 import sys
 import urllib.parse
 import base64
-# from pytavia_modules.phrase_get_app.split_raw_phrase import split_raw_phrase
 
 sys.path.append("pytavia_core"    ) 
 sys.path.append("pytavia_settings") 
@@ -14,11 +13,7 @@ sys.path.append("pytavia_modules" )
 sys.path.append("pytavia_modules/rest_api_controller")
 sys.path.append("pytavia_modules/management_content") 
 sys.path.append("pytavia_modules/phrase_get_app") 
-
-# from datetime          import datetime
-
-# from apscheduler.schedulers.background import BackgroundScheduler
-
+sys.path.append("pytavia_modules/manage_video")
 
 # adding comments
 from pytavia_stdlib  import utils
@@ -35,8 +30,8 @@ from management_content import delete_content
 from management_content import change_status_live_content
 from management_content import news
 
-from phrase_get_app import search_phrase
-from phrase_get_app import split_raw_phrase
+from phrase_get_app     import search_phrase
+from manage_video   import split_raw_phrase
 
 
 ##########################################################
@@ -80,16 +75,28 @@ def api_hix():
 @app.route("/search", methods=["GET"])
 def search():  
     params = request.args.to_dict()    
-    app.logger.debug( "-----------------------------eee" )
     response = search_phrase.search_phrase(app).search( params )
     return response
 # end def
 
-@app.route("/split_raw_phrase", methods=["GET"])
+@app.route("/split_raw_phrase", methods=["POST"])
 def split_phrase():  
+    files                 = request.files
     params = request.args.to_dict()    
-    app.logger.debug( "-----------------------------eee" )
-    response = split_raw_phrase.split_raw_phrase(app)._split_scene_movie( params )
+    # params                = sanitize.clean_html_dic(request.form.to_dict())
+    # params["fk_user_id" ] = session.get("fk_user_id")
+    params["files"      ] = files
+
+    response = split_raw_phrase.split_raw_phrase(app)._cleanse_data( params )
+    return response
+# end def
+
+@app.route("/search-script", methods=["GET"])
+def search_script():    
+    params = request.args.to_dict()    
+    app.logger.debug("---------------param")
+    app.logger.debug(params)
+    response = search_phrase.search_phrase(app).search( params )
     return response
 # end def
 
@@ -102,14 +109,14 @@ def launch_news():
     return response
 # end def
 
-@app.route("/launcher", methods=["GET"])
+@app.route("/what", methods=["GET"])
 def content():  
     params = request.args.to_dict()    
     response = view_content.view_content(app).process( params )
     return response
 # end def
 
-@app.route("/launcher", methods=["GET"])
+@app.route("/what", methods=["GET"])
 def content_direct(menu_value):  
     params = request.args.to_dict()    
     response = view_content.view_content(app).process( params )
@@ -144,14 +151,6 @@ def change_status_live_content_data():
     response = change_status_live_content.change_status_live_content(app).process( params )        
     res = list(response.keys())[0]  #take first key in list     
     return redirect(url_for('content_direct',menu_value=response[res]))      
-# end def
-
-# def temp():
-#     mgdDB = database.get_db_conn(config.mainDB)
-#     mgdDB.db_content_management.update_one(
-#             { "pkey"          : '628a16f19499ba4469b9e5a1-faa8dcb21783d03d1493408be110490688c62e4f5cfc8e9f-8692663' },
-#             { "$set"          : { "content"   : "astffff DEACTIVE INI" }} 
-#         )
 
 
 @app.route("/formschedule", methods=["POST","GET"])
@@ -159,97 +158,3 @@ def form():
     params = request.args.to_dict()
     response = schedule_app.schedule_app(app).process( params )
     return response
-# end def
-
-# @app.route("/updateschedule", methods=["POST"])
-# def updateform():
-#     params = request.args.to_dict()
-#     response = update_schedule_app.update_schedule_app(app).process( params )
-#     return response
-# # end def
-
-@app.route("/v1/api/api-v1", methods=["GET"])
-def api_v1():
-    params = request.args.to_dict()
-    response = module1.module1(app).process( params )
-    return response.stringify_v1()
-# end def
-
-@app.route("/v1/api/api-post-v1", methods=["POST"])
-def api_post_v1():
-    params = request.form.to_dict()
-    response = module1.module1(app).process( params )
-    return response.stringify_v1()
-# end def
-
-### Sample generic endpoints
-"""
-# TODO: update example using new db actions
-### sample generic archive -- archive book
-@app.route("/process/book/archive", methods=["POST"])
-def book_proc_archive():
-    params = request.form.to_dict()
-    response = generic_proc.generic_proc(app).archive({
-        "collection"    : "db_book",
-        "pkey"          : params["pkey"]
-    })
-
-    if response.get('status_code') == config.G_STATUS['SUCCESS']['CODE']:
-        return response.http_stringify()
-    else:
-        return response.http_stringify()
-
-### sample generic restore -- restore book
-@app.route("/process/book/restore", methods=["POST"])
-def book_proc_restore():
-    params = request.form.to_dict()
-    response = generic_proc.generic_proc(app).restore({
-        "collection"    : "db_book",
-        "pkey"          : params["pkey"]
-    })
-
-    if response.get('status_code') == config.G_STATUS['SUCCESS']['CODE']:
-        return response.http_stringify()
-    else:
-        return response.http_stringify()
-
-### sample two way reference -- reference book to author and author to book
-@app.route("/process/book/add_author", methods=["POST"])
-def book_proc_add_author():
-    params = request.form.to_dict()
-    response = generic_proc.generic_proc(app).add_two_way_reference({
-        "main"  : {
-            "collection"    : "db_book",
-            "pkey"          : params["book_pkey"]
-        },  
-        "sub"  : {
-            "collection"    : "db_author",
-            "pkey"          : params["author_pkey"]
-        }
-    })
-
-    if response.get('status_code') == config.G_STATUS['SUCCESS']['CODE']:
-        return response.http_stringify()
-    else:
-        return response.http_stringify()
-
-### sample remove two way reference -- dereference book to author and vise versa
-@app.route("/process/book/remove_group", methods=["POST"])
-def book_proc_remove_group():
-    params = request.form.to_dict()
-    response = generic_proc.generic_proc(app).remove_two_way_reference({
-        "main"  : {
-            "collection"    : "db_book",
-            "pkey"          : params["book_pkey"]
-        },  
-        "sub"  : {
-            "collection"    : "db_author",
-            "pkey"          : params["author_pkey"]
-        }
-    })
-
-    if response.get('status_code') == config.G_STATUS['SUCCESS']['CODE']:
-        return response.http_stringify()
-    else:
-        return response.http_stringify()
-"""

@@ -18,7 +18,7 @@
 <body id="page-top">
     <header class="masthead">   
         <div id="vid" class="player">
-            <video class="video-container" src="../static/storage/2cf3d522-3efb-11ed-9527-00155d1633f5.mp4" autoplay="true" controls="controls" id="videos" height="200"></video>
+            <video class="video-container" src="../static/storage/5d414c30-6405-11ed-a356-00155da1d93e.mp4" autoplay="true" controls="controls" id="videos" height="200"></video>
             <!-- <video class="video-container" autoplay>
                 <source src="../static/videos/moon.mp4" type="video/mp4" />
                 <source src="../static/videos/moon.mp4" type="video/webm" />
@@ -67,8 +67,8 @@
         <!-- <video src="../static/storage/2cf3d522-3efb-11ed-9527-00155d1633f5.mp4" autoplay="true" controls="controls" id="videos" height="200"> -->
         <!-- Use a button to pause/play the video with JavaScript -->
         <div id="sub" class="subtitle"></div>
-        <form class="form-inline">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <form class="form-inline" action="/search-script" method="GET" enctype="form-data">
+            <input class="form-control mr-sm-2" name="search-keyword" type="text" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
     </div>
@@ -98,8 +98,9 @@
         var videoSource = new Array();
         var subtitle    = new Array();
 
-        for (var j = 0; j < 40; j++) {
+        for (var j = 0; j < x.length; j++) {
             console.log(x[j])
+            console.log("limit----------    ")
             scene_name      = x[j]['scene_name'];
         
             videoSource[j]  = '../static/storage/'+scene_name;
