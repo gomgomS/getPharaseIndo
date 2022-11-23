@@ -1,4 +1,6 @@
 static/storage/
+static/upload_c/
+static/upload/
 
 *.pyc
 *.swp

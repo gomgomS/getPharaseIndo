@@ -44,17 +44,49 @@ class search_phrase:
         ALL_DATA     = 'haii'
         
         self.webapp.logger.debug( params )
+        
 
         if params.get('search-keyword') is None:
             manage_content_view  = self.mgdDB.db_scripts.find({},{'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1})
+        # else:
+        #     self.webapp.logger.debug( "BELUM" )
+        #     search_keyword = params['search-keyword']
+        #     search_figure_keyword = params['search-figure-keyword']
+        #     self.webapp.logger.debug(search_figure_keyword == '')
+        #     self.webapp.logger.debug( search_keyword)
+        #     manage_content_view  = self.mgdDB.db_scripts.find({},{'$text':{'$search':'\"'+search_keyword+'\" '}},
+        #                                 {'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1}).sort([("startTime", pymongo.ASCENDING)])
         else:
-            self.webapp.logger.debug( "BELUM" )
-            search_keyword = params['search-keyword']
-            self.webapp.logger.debug( search_keyword)
-            manage_content_view  = self.mgdDB.db_scripts.find({'$text':{'$search':search_keyword}},
-                                        {'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1}).sort([("startTime", pymongo.ASCENDING)])
+            search_keyword        = params['search-keyword']
+            search_figure_keyword = params['search-figure-keyword']
+
+            if search_keyword != "" and search_figure_keyword == "":
+                self.webapp.logger.debug( "BELUM" )
             
-            self.webapp.logger.debug("333333333333333333333333")
+                self.webapp.logger.debug(search_figure_keyword == '')
+                self.webapp.logger.debug( search_keyword)
+                manage_content_view  = self.mgdDB.db_scripts.find({'$text':{'$search':'\"'+search_keyword+'\" '}},
+                                            {'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1}).sort([("startTime", pymongo.ASCENDING)])
+            else:
+                # 3 if filter only keyword figure 
+                filter = {}
+                self.webapp.logger.debug( "HIAAAAAAAAAAAAAAAAAAAAAAAA" )
+                if search_figure_keyword != "":                    
+                    list_data_video  = self.mgdDB.db_data_video.find({'$text':{'$search':search_figure_keyword}},
+                                            {'_id':0,'focus_figure':1,'id_upload':1}).sort([("startTime", pymongo.ASCENDING)])
+                    arr = []
+                    for data in list_data_video:
+                        arr.append(data['id_upload'])
+                    
+                    # self.webapp.logger.debug(arr)
+                    
+                    filter['id_upload'] = {'$in' : arr }
+
+                if search_keyword != ""       : filter['ref']       = {'$regex' : search_keyword }
+
+                manage_content_view  = self.mgdDB.db_scripts.find(filter,{'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1}).sort([("startTime", pymongo.ASCENDING)])
+           
+                self.webapp.logger.debug("-------------------------------")
         # s elf.webapp.logger.debug(list(manage_content_view))
         ALL_DATA     = list( manage_content_view )
 
@@ -62,7 +94,6 @@ class search_phrase:
             "front_page.html",
             ALL_DATA = ALL_DATA
         )
-        self.webapp.logger.debug( "-----------------------------eee" )
         return response
     # end def
 # end class

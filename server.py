@@ -4,6 +4,7 @@ import pymongo
 import sys
 import urllib.parse
 import base64
+import html as html_unescape
 
 sys.path.append("pytavia_core"    ) 
 sys.path.append("pytavia_settings") 
@@ -20,7 +21,9 @@ from pytavia_stdlib  import utils
 from pytavia_core    import database 
 from pytavia_core    import config 
 from pytavia_core    import model
+
 from pytavia_stdlib  import idgen 
+from pytavia_stdlib  import sanitize
 
 from rest_api_controller import module1 
 
@@ -82,7 +85,9 @@ def search():
 @app.route("/split_raw_phrase", methods=["POST"])
 def split_phrase():  
     files                 = request.files
-    params = request.args.to_dict()    
+    params                = sanitize.clean_html_dic(request.form.to_dict())
+    app.logger.debug("---------------param")
+    app.logger.debug(params)
     # params                = sanitize.clean_html_dic(request.form.to_dict())
     # params["fk_user_id" ] = session.get("fk_user_id")
     params["files"      ] = files
