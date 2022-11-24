@@ -42,9 +42,12 @@ class search_phrase:
 
     def search(self, params):
         ALL_DATA     = 'haii'
+        search_keyword = ''
+        manage_content_view_temp = [{'ref': 'data tidak tersedia'}]
         
         self.webapp.logger.debug( params )
         
+        total_all_data = self.mgdDB.db_scripts.count_documents({})
 
         if params.get('search-keyword') is None:
             manage_content_view  = self.mgdDB.db_scripts.find({},{'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1})
@@ -71,6 +74,7 @@ class search_phrase:
                 # 3 if filter only keyword figure 
                 filter = {}
                 self.webapp.logger.debug( "HIAAAAAAAAAAAAAAAAAAAAAAAA" )
+
                 if search_figure_keyword != "":                    
                     list_data_video  = self.mgdDB.db_data_video.find({'$text':{'$search':search_figure_keyword}},
                                             {'_id':0,'focus_figure':1,'id_upload':1}).sort([("startTime", pymongo.ASCENDING)])
@@ -78,21 +82,25 @@ class search_phrase:
                     for data in list_data_video:
                         arr.append(data['id_upload'])
                     
-                    # self.webapp.logger.debug(arr)
-                    
                     filter['id_upload'] = {'$in' : arr }
 
-                if search_keyword != ""       : filter['ref']       = {'$regex' : search_keyword }
-
+                if search_keyword != "" : filter['ref'] = {'$regex' : search_keyword }
+                
                 manage_content_view  = self.mgdDB.db_scripts.find(filter,{'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1}).sort([("startTime", pymongo.ASCENDING)])
            
                 self.webapp.logger.debug("-------------------------------")
-        # s elf.webapp.logger.debug(list(manage_content_view))
+        # self.webapp.logger.debug(list(manage_content_view))        
         ALL_DATA     = list( manage_content_view )
+        self.webapp.logger.debug(ALL_DATA is None) 
+        if ALL_DATA == []:
+            ALL_DATA = manage_content_view_temp
 
         response = render_template(
             "front_page.html",
-            ALL_DATA = ALL_DATA
+            ALL_DATA = ALL_DATA,
+            search_keyword = search_keyword,
+            total_data = len(ALL_DATA),
+            total_all_data = total_all_data
         )
         return response
     # end def
