@@ -34,7 +34,9 @@ from management_content import change_status_live_content
 from management_content import news
 
 from phrase_get_app     import search_phrase
-from manage_video   import split_raw_phrase
+
+from manage_video       import split_raw_phrase
+from manage_video       import delete_video_data
 
 
 ##########################################################
@@ -104,6 +106,17 @@ def search_script():
     response = search_phrase.search_phrase(app).search( params )
     return response
 # end def
+
+# Begin Delete Data video
+@app.route("/delete-video-data", methods=["POST"])
+def delete_video_data_all():  
+    params                = sanitize.clean_html_dic(request.form.to_dict())
+    response = delete_video_data.delete_video_data(app).process( params )    
+    res = list(response.keys())[0]  #take first key in list     
+    return redirect(url_for('content_direct',kboom=response[res]))      
+# end def
+
+# End Delete Data Video
 
 #END PHRASE_GET_APP
 

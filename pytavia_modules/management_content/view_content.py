@@ -86,6 +86,15 @@ class view_content:
             #     }
             # ) 
             ALL_DATA     = []
+        elif content == 'LIST_VIDEO':
+            launcher_content = 'manage_video/list_video.html'            
+            manage_content_view     = self.mgdDB.db_data_video.find(
+                {
+                    # "status": {"$not":{"$regex":"DEACTIVE"}},
+                    # "status_content": 'expired'
+                }
+            ) 
+            ALL_DATA     = list( manage_content_view )
         else:
             launcher_content = 'view_content.html'
             ALL_DATA = []
