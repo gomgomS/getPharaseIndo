@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up Form by Colorlib</title>
+
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="../static/fonts/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
+
+    <div class="main">
+
+        <h1>Login</h1>
+        <div class="container">
+            <div class="sign-up-content">
+                <form action="/login_app" method="POST" class="signup-form">
+                    <h2 class="form-title">login here</h2>
+                    {{INFO_ERROR}}
+                    <div class="form-textbox">
+                        <label for="name">Email</label>
+                        <input type="text" name="emailorusername" id="email" />
+                    </div>
+
+                    <div class="form-textbox">
+                        <label for="pass">Password</label>
+                        <input type="password" name="pass" id="pass" />
+                    </div>
+
+
+                    <div class="form-textbox">
+                        <input type="submit" name="submit" id="submit" class="submit" value="LOGIN" />
+                    </div>
+                </form>
+
+                <p class="loginhere">
+                    Dont have an account ?<a href="/register" class="loginhere-link"> sign up</a>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="../static/vendor/jquery/jquery.min.js"></script>
+    <script src="../static/js/main.js"></script>
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

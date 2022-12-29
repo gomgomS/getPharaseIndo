@@ -143,6 +143,22 @@ db = {
         "end_date"                   : "",
         "status_content"             : "",  # the content live (1) or not (0)
     },
+
+     "db_users"          : {
+        "name"                       : "",
+        "email"                      : "",
+        "password"                   : "",
+        "role"                       : "",        
+    },
+
+     "db_token_access"               : {
+        "user_id"                    : "",
+        "start_datetime"             : "",
+        "end_datetime"               : "",
+        "tipe_token"                 : "",
+        "status_token"               : "", #request, activate, stopped
+        "token"                      : "",        
+    },
    
 } 
 """

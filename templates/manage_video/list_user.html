@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ngomong</title>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap/css/bootstrap.css">
+    <link href="/static/css/style-admin.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/static/lib/flatpicker/flatpickr.min.css">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/shortcut-buttons-flatpickr@0.1.0/dist/themes/light.min.css">
+</head>
+
+<body>
+    <div>
+        <!--Main Navigation-->
+        <div id="include"></div>
+        <!--Main Navigation-->
+
+          <!-- The Modal -->
+          <div class="modal" id="myModal">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="d-flex justify-content-between">
+                        <div class="container pt-4">GENERATE NEW TOKEN</div> 
+                        <div class="d-flex justify-content-end m-4">
+                            <div id="userName"></div>
+                            <div> &nbsp;&nbsp;|&nbsp;&nbsp;</div>
+                            <div id="userEmail"></div>
+                        </div>
+                    </div>
+                    <form action="/generate-token" method="POST" class="row g-3 m-4">
+                        <input type="hidden" id="userId" name="user_id">
+                        <div class="mb-3 row">
+                            <label for="title" class="col-sm-2 col-form-label">Token</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="showToken"
+                                    name="token" required>
+
+                                <button type="button" class="btn btn-primary"
+                                    id="generateToken">Generate New Token</button>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="dujul"
+                                class="col-sm-2 col-form-label text-right">Periode</label>
+                            <div class="col-sm-3">
+                                <div id="datepicker" class="d-flex align-items-center">
+                                    <input id="datepicker" name="start_datetime"
+                                        class="form-control" type="text"
+                                        placeholder="Select Date.." data-input
+                                        autocomplete="off" required>
+                                    <i data-toggle id="calendar2"
+                                        class="fas fa-calendar-week Fz(28px) text-primary Cur(p) mg-l-5"></i>
+                                </div>
+                            </div>
+                            <span class="mg-t-10 col-sm-1 text-center">---</span>
+                            <div class="col-sm-3">
+                                <div id="datepicker2" class="d-flex align-items-center">
+                                    <input name="end_datetime" data-input id="datepicker2"
+                                        type="text" class="form-control" id=""
+                                        placeholder="Select Date.." autocomplete="off" required>
+                                    <i data-toggle id="calendar2"
+                                        class="fas fa-calendar-week Fz(28px) text-primary Cur(p) mg-l-5"></i>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="mb-3 row">
+                        <label class="col-sm-2 col-form-label">Tipe Token</label>
+                        <div class="col-sm-5">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tipe_token" value="1 hari" id="flexRadioDefault1">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    1 Hari
+                                </label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tipe_token" value="1 bulan" id="flexRadioDefault2" checked>
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    1 Bulan
+                                </label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tipe_token" value="6 bulan" id="flexRadioDefault2" checked>
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    6 Bulan
+                                </label>
+                                </div>
+                                <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tipe_token" value="1 tahun" id="flexRadioDefault2" checked>
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    1 tahun
+                                </label>
+                                </div>
+                        </div>
+                        </div>
+                     
+                        <div>
+                          
+                        </div>
+                        <input class="form-control btn btn-info" type="submit">
+                    </form>
+
+
+                    <!-- Modal body -->
+                    <div class="modal-bod">
+                        <table class="table table-striped table-dark">
+                            <tbody class="data-each-token">
+                            </tbody>
+                          </table>
+                        
+                    </div>
+
+                    <!-- Modal footer -->
+                    <!-- <div class="modal-footer">
+                        <button type="button" class="btn btn-danger"
+                            data-bs-dismiss="modal">Close</button>
+                    </div> -->
+
+                </div>
+            </div>
+        </div>
+
+
+        <!--Main layout-->
+
+        <main style="margin-top: 10%">
+
+            <div class="list-content-part m-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nama</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+
+                            <!-- <th> action </th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for data in ALL_DATA %}
+                        <tr>
+                            <th scope="row"></th>
+                            <td>{{data['name']}}</td>
+                            <td >{{data['email']}}</td>
+                            <td>{{data['role']}}</td>
+                            
+                            <td>
+                                <!-- Extra large modal -->
+                                <button type="button" class="btn btn-primary openmodal" data-bs-toggle="modal"
+                                    data-bs-target="#myModal" data-content="{{data}}">
+                                    Open modal
+                                </button>
+                            </td>
+                            <td>
+                                <!-- <form action="/change-status-live-content" method="POST">
+                               <input type="hidden" class="form-control" value="{{data['id_upload']}}" name="change-status">
+                               <input type="submit" value="LIVE CONTENT">
+                           </form> -->
+
+                                <form action="/delete-video-data" method="POST">
+                                    <input type="hidden" class="form-control" value="{{data['id_upload']}}"
+                                        name="delete">
+                                    <input type="submit" value="DELETE">
+                                </form>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <!--Main layout-->
+    </div>
+    <script src="/static/lib/jquery/jquery.min.js"></script>
+    <script src="/static/lib/flatpicker/flatpickr.js"></script>
+    <script src="/static/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/shortcut-buttons-flatpickr@0.1.0/dist/shortcut-buttons-flatpickr.min.js"></script>
+
+    <script>
+        //  ['datepicker', 'datepicker2'].forEach(el => {
+        //     $(`#${el}`).flatpickr({
+        //         enableTime: true,
+        //         dateFormat: "d/m/Y H:i",
+        //         wrap: true,
+        //         allowInput: true,
+        //         defaultDate: new Date(),
+        //     })
+        // }); 
+
+        var  ALL_DATA = {{ALL_DATA | tojson}};
+        console.log(ALL_DATA)
+        
+        $(`#datepicker`).flatpickr({
+
+            enableTime: true,
+            dateFormat: "d/m/Y H:i",
+            wrap: true,
+            allowInput: true,
+            defaultDate: new Date(),
+
+        })
+        flatpickr("#datepicker2", {
+            dateFormat: "d/m/Y H:i",
+            plugins: [
+                ShortcutButtonsPlugin({
+                    theme: 'dark',
+                    button: [
+                        { label: '1 hari' },
+                        { label: '1 bulan' },
+                        { label: '6 bulan' },
+                        { label: '1 tahun' },
+                    ],
+                    onClick(index, fp, button) {
+                        console.log(index)
+
+                        if (index == 0) {
+
+                            var date = moment().add(1, 'days').toISOString();
+
+                            // let date = Date.now() + 24 * index * 60 * 60 * 1000
+                        }
+                        else if (index == 1) {
+                            var date = moment().add(30, 'days').toISOString();
+                        }
+                        else if (index == 2) {
+                            var date = moment().add(6, 'months').toISOString();
+                        }
+                        else if (index == 3) {
+                            var date = moment().add(1, 'years').toISOString();
+                        }
+
+                        fp.setDate(date);
+                        fp.close();
+                    }
+                })
+            ]
+        });
+
+
+        $(document).ready(function () {
+            $.get("nav", function (data) {
+                $("#include").html(data);
+            });
+            // });      
+            // $( document ).ready(function() {
+
+            // set the length of the string
+            var stringLength = 60;
+
+            // list containing characters for the random string
+            var stringArray = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '!', '?'];
+
+            $("#generateToken").click(function () {
+
+                var rndString = "";
+
+                // build a string with random characters
+                for (var i = 1; i < stringLength; i++) {
+                    var rndNum = Math.ceil(Math.random() * stringArray.length) - 1;
+                    rndString = rndString + stringArray[rndNum];
+                };
+
+                $("#showToken").val(rndString);
+
+            });
+
+            $(".openmodal").click(function () {
+
+                var getemail =  $("#thisisemail").val()
+                // $("#showToken").val(rndString);
+
+            });
+            $("button[data-bs-target='#myModal']").on('click',function(){
+                var arr = $(this).attr('data-content');
+                arr = arr.replace(/'/g, `"`);
+                
+                const data_user = JSON.parse(arr);
+                console.log(data_user)
+                $("#userId").val(data_user['pkey'])
+                $("#userName").html(data_user['name']);
+                $("#userEmail").html(data_user['email']);
+                
+                console.log(data_user.token_data.length)
+                for(i=0;i<data_user.token_data.length;i++){
+                    $(".data-each-token").append("<tr id='token-column"+i+"'></tr>");
+                    console.log(data_user.token_data[i].tipe_token);
+                    var _html = "<td>"+data_user.token_data[i]['tipe_token']+"</td>\
+                                <td>"+data_user.token_data[i]['token']+"</td>\
+                                <td>"+data_user.token_data[i]['end_datetime']+"</td>"
+                    $("#token-column"+i).html(_html);
+                }
+            });
+
+
+        });
+
+
+
+
+    </script>
+</body>
+
+</html>

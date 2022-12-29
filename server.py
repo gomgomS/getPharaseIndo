@@ -15,6 +15,7 @@ sys.path.append("pytavia_modules/rest_api_controller")
 sys.path.append("pytavia_modules/management_content") 
 sys.path.append("pytavia_modules/phrase_get_app") 
 sys.path.append("pytavia_modules/manage_video")
+sys.path.append("pytavia_modules/user")
 
 # adding comments
 from pytavia_stdlib  import utils
@@ -33,10 +34,20 @@ from management_content import delete_content
 from management_content import change_status_live_content
 from management_content import news
 
+from management_content import nav_view_app
+
 from phrase_get_app     import search_phrase
 
 from manage_video       import split_raw_phrase
 from manage_video       import delete_video_data
+from manage_video       import generate_token
+
+from user               import dashboard
+
+from auth import register_view_app
+from auth import login_view_app
+from auth import register_app
+from auth import login_app
 
 
 ##########################################################
@@ -75,6 +86,80 @@ def api_hix():
     app.logger.debug('yeahhh')
     return 'ma brooo gloooo gl;oooo bro'
 # end def
+
+@app.route("/nav", methods=["GET"])
+def nav_view():  
+    params = request.args.to_dict()    
+    response = nav_view_app.nav_view_app(app).process( params )    
+    return response
+# end def
+
+# START AUTHENTIC THINGS
+
+def login_precheck(params):
+    fk_user_id  = session.get("username")
+    
+    if params['role'] != 'all':
+        if params['role'] != session.get('role'):  
+            return 'gak punya access'
+
+    if fk_user_id == None:
+        session.clear()
+        return redirect(url_for("login_view"))
+    # end if
+# end def
+
+@app.route("/login/<info_error>", methods=["GET"])
+def login_view_direct(info_error):          
+    params = {**request.args.to_dict(), **info_error}
+    response = login_view_app.login_view_app(app).process( params )
+    return response
+# end def
+
+@app.route("/login", methods=["GET"])
+def login_view():  
+    params = request.args.to_dict()    
+    response = login_view_app.login_view_app(app).process( params )    
+    return response
+# end def
+
+@app.route("/register", methods=["GET"])
+def register_view():  
+    params = request.args.to_dict()    
+    response = register_view_app.register_view_app(app).process( params )
+    return response
+# end def
+
+@app.route("/login_app", methods=["POST"])
+def login_to_apps():  
+    params                = sanitize.clean_html_dic(request.form.to_dict()) 
+    response = login_app.login_app(app).process( params )
+    app.logger.debug(response)
+    # check if respnse is list or not    
+    
+    if "kboom" in response:  
+        res = list(response.keys())[0]   
+        if response[res] != 'none':           
+            return redirect(url_for('content_direct',kboom=response[res]))             
+        else:
+            return login_view_direct(info_error=response)
+    else:
+        return redirect(url_for('launch_dashboard'))       
+# end def
+
+@app.route("/register_app", methods=["POST"])
+def register_to_apps():  
+    params = request.args.to_dict()    
+    response = register_app.register_app(app).process( params )
+    return response
+# end def
+
+@app.route("/logout", methods=["POST","GET"])
+def logout():  
+    session.clear()
+    return  redirect(url_for('login_view'))  
+# end def
+# END AUTHENTIC THINGS
 
 #START PHRASE_GET_APP
 @app.route("/search", methods=["GET"])
@@ -118,7 +203,30 @@ def delete_video_data_all():
 
 # End Delete Data Video
 
+# Begin Generate Token
+@app.route("/generate-token", methods=["POST"])
+def generate_token_user():  
+    params                = sanitize.clean_html_dic(request.form.to_dict())
+    response = generate_token.generate_token(app).process( params )    
+    res = list(response.keys())[0]  #take first key in list     
+    return redirect(url_for('content_direct',kboom=response[res]))      
+# end def
+
+# End Generate Token
+
 #END PHRASE_GET_APP
+
+
+@app.route("/dashboard", methods=["GET"])
+def launch_dashboard():  
+    redirect_return = login_precheck({"role":'all'})
+    if redirect_return:
+        return redirect_return
+    # end if
+    params = request.args.to_dict()    
+    response = dashboard.dashboard(app).process( params )
+    return response
+# end def
 
 @app.route("/news", methods=["GET"])
 def launch_news():  
@@ -129,6 +237,12 @@ def launch_news():
 
 @app.route("/what", methods=["GET"])
 def content():  
+    redirect_return = login_precheck({"role":'admin'})
+    if redirect_return:
+        return redirect_return
+    # end if
+    
+    
     params = request.args.to_dict()    
     response = view_content.view_content(app).process( params )
     return response
@@ -136,6 +250,10 @@ def content():
 
 @app.route("/what", methods=["GET"])
 def content_direct(menu_value):  
+    redirect_return = login_precheck({"role":'admin'})
+    if redirect_return:
+        return redirect_return
+    # end if
     params = request.args.to_dict()    
     response = view_content.view_content(app).process( params )
     return response

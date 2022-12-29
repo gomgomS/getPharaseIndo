@@ -1,0 +1,59 @@
+<header>
+    <!-- Navbar -->
+    <nav id="main-navbar" class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+        
+        <!-- Container wrapper -->
+        <div class="container-fluid">
+            <!-- Toggle button -->
+            <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#sidebarMenu"
+                aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Brand -->
+            <span>
+                <a class="navbar-brand" href="#">
+                    <img src="../static/assets/img/ngomong-logo-transparant.png" height="60" alt="Avatar"
+                        loading="lazy" />
+                </a>
+            </span>
+            <span>input video here</span>
+
+
+            <!-- Right links -->
+
+            <!-- AVATAR -->
+            <a class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <span>{{USERNAME}}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+
+        </div>
+        <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+</header>
+<!--Main Navigation-->
+
+<!-- Sidebar -->
+<nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white pt-">
+    <div class="position-sticky">
+        <div class="list-group list-group-flush mx-3 mt-4">
+            <ul id="collapseExample1" class="collapse show list-group list-group-flush">
+                <li class="list-group-item py-1">
+                    <a href="what?kboom=UPLOAD_RAW" class="text-reset">UPLOAD CONTENT AND SCRIPT</a>
+                </li>
+                <li class="list-group-item py-1">
+                    <a href="what?kboom=LIST_VIDEO" class="text-reset">MANAGE CONTENT</a>
+                </li>
+                <li class="list-group-item py-1">
+                    <a href="what?kboom=LIST_USER" class="text-reset">MANAGE USER</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Sidebar -->

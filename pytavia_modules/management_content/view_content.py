@@ -95,14 +95,34 @@ class view_content:
                 }
             ) 
             ALL_DATA     = list( manage_content_view )
+        elif content == 'LIST_USER':
+            launcher_content = 'manage_video/list_user.html'            
+            manage_content_view     = self.mgdDB.db_users.find(
+                {
+                     "role": {"$not":{"$regex":"admin"}}
+                    # "status_content": 'expired'
+                },{"_id":0,"password":0}
+            ) 
+
+            data_token_all = []
+            for each_content in manage_content_view:
+                token_data_get     = self.mgdDB.db_token_access.find(
+                    {
+                        "user_id": each_content['pkey']
+                        # "status_content": 'expired'
+                    },{"_id":0}
+                ) 
+                each_content['token_data'] = list(token_data_get)
+                data_token_all.append(each_content)
+
+
+            
+            ALL_DATA     = list( data_token_all )
+
         else:
             launcher_content = 'view_content.html'
             ALL_DATA = []
 
-        
-        
-
-        
         response = render_template(
             launcher_content,
             ALL_DATA = ALL_DATA
