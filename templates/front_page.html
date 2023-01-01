@@ -6,16 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>get Indo</title>
-    <link rel="icon" type="image/x-icon" href="../static/assets/favicon.ico" />
+    <link rel="icon" href="../static/assets/img/favicon.ico">
+    <title>ngomong</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <link href="../static/css/styles.css" rel="stylesheet" />
+    <style>
+
+    </style>
 </head>
 
 <body id="page-top">
+    <!--Modal: modalCoupon-->
+    <div class="modal fade top" id="modalSorry" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true" data-backdrop="true">
+    <div class="modal-dialog modal-frame modal-top modal-notify modal-success" role="document">
+        <!--Content-->
+        <div class="modal-content">
+        <!--Body-->
+        <div class="modal-body">
+            <div class="row d-flex justify-content-center align-items-center">
+
+                <h3 class="badge">Sorry!!</h3>            
+                <p class="pt-3 mx-4">kamu belum berlangganan, jadi cuma bisa nonton segini deh..
+                    <strong>kebetulan. lagi promo nih, silahkan cek pada halaman Dashboard</strong>.</p>
+
+                <a type="button" href="/dashboard" class="btn btn-success">Dashboard</a>
+                    <i class="fas fa-book ml-1 white-text"></i>
+                </a>
+                <a type="button" href="/register" class="btn btn-outline-success waves-effect"> jika belum Daftar, daftar disini</a>
+            </div>
+            <div class="align-items-center">
+
+                <p class="pt-3 mx-4">jika kamu sudah punya token yang aktif, silahkan input di bawah.
+                    <strong>jika token lupa, silahkan lewat <a href="/login">login disini</a> </strong>.</p>
+    
+                <form action="/login-by-token" method="POST">
+                    <input class="m-0 p-0" name="token" id="token" >            
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+        </div>
+        <!--/.Content-->
+    </div>
+    </div>
+    <!--Modal: modalCoupon-->
     <header class="masthead">   
         <div id="vid" class="player">
             <video class="video-container" src="../static/storage/loading.mkv" autoplay="true" controls="controls" id="videos" height="200"></video>
@@ -39,7 +77,7 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong">
             <span>
-                <span>ngomong</span>    
+                <span>ngomong</span>
                 <a class="navbar-brand" href="#">
                     <img src="../static/assets/img/ngomg-logo.png" class="rounded-circle" height="50" alt="Avatar"
                         loading="lazy" />
@@ -53,10 +91,15 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#">Login <span class="sr-only">(current)</span></a>
+                   
+                        {% if username is none %}
+                        <a class="nav-link" href="/login">Login <span class="sr-only">(current)</span></a>
+                        {% else %}
+                        <a class="nav-link" href="/dashboard">{{username}}[{{token_status}}]<span class="sr-only">(current)</span></a>
+                        {% endif %}
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">youtube(coming soon)</a>
+                        <a aria-readonly="true" class="nav-link" href="#">youtube(coming soon)</a>
                     </li>
                 </ul>
             </div>
@@ -88,12 +131,16 @@
         crossorigin="anonymous"></script>
     <script src="../static/js/scripts.js"></script>
     <script>       
+        // JQUERY
+      
+
         // var count = 1;
-       
         // var mp4Vid = document.getElementById('mp4Source');
         const x = JSON.parse('{{ ALL_DATA|tojson }}')
+        const status_token = JSON.parse('{{ token_status|tojson }}')
+        
         var search_keyword = JSON.parse('{{ search_keyword | tojson }}').toLowerCase()
-        console.log(x)
+  
         // console.log(x[0])
         // for (var j = 0; j < 4; j++) {
         //         scene_name = x[j]['scene_name'];
@@ -105,6 +152,7 @@
         console.log(x)
         var videoSource = new Array();
         var subtitle    = new Array();
+        var dump_numb   = 0;
 
         for (var j = 0; j < x.length; j++) {
             console.log(x[j])
@@ -135,11 +183,19 @@
         
         function myFunctionHandle() {
             key++;
-            if (key == videoCount) {
-                key = 0;
-                playVideo(key);
-            } else {
-                playVideo(key);
+            dump_numb ++;            
+            
+            if(dump_numb == 2 && status_token != 'active'){
+                $("#modalSorry").modal({backdrop: 'static', keyboard: false});
+               
+            }
+            else{                
+                if (key == videoCount) {
+                    key = 0;
+                    playVideo(key);
+                } else {
+                    playVideo(key);
+                }
             }
         }
         </script>

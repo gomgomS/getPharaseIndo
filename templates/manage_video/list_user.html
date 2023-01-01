@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ngomong</title>
+    <link rel="icon" href="../static/assets/img/favicon.ico">
+    <title>List User - ngomong</title>
     <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap/css/bootstrap.css">
     <link href="/static/css/style-admin.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="/static/lib/flatpicker/flatpickr.min.css">
@@ -136,6 +137,8 @@
                             <th scope="col">Nama</th>
                             <th scope="col">Email</th>
                             <th scope="col">Role</th>
+                            <th scope="col">action</th>
+                            
 
                             <!-- <th> action </th> -->
                         </tr>
@@ -149,23 +152,25 @@
                             <td>{{data['role']}}</td>
                             
                             <td>
-                                <!-- Extra large modal -->
-                                <button type="button" class="btn btn-primary openmodal" data-bs-toggle="modal"
-                                    data-bs-target="#myModal" data-content="{{data}}">
-                                    Open modal
-                                </button>
-                            </td>
-                            <td>
-                                <!-- <form action="/change-status-live-content" method="POST">
-                               <input type="hidden" class="form-control" value="{{data['id_upload']}}" name="change-status">
-                               <input type="submit" value="LIVE CONTENT">
-                           </form> -->
+                                <div class="flex d-flex justify-content-between">
 
-                                <form action="/delete-video-data" method="POST">
-                                    <input type="hidden" class="form-control" value="{{data['id_upload']}}"
-                                        name="delete">
-                                    <input type="submit" value="DELETE">
-                                </form>
+                                    <!-- Extra large modal -->
+                                    <button type="button" class="btn btn-primary openmodal" data-bs-toggle="modal"
+                                        data-bs-target="#myModal" data-content="{{data}}">
+                                        view token
+                                    </button>
+                               
+                                    <!-- <form action="/change-status-live-content" method="POST">
+                                   <input type="hidden" class="form-control" value="{{data['id_upload']}}" name="change-status">
+                                   <input type="submit" value="LIVE CONTENT">
+                               </form> -->
+    
+                                    <form action="/delete-video-data" method="POST">
+                                        <input type="hidden" class="form-control" value="{{data['id_upload']}}"
+                                            name="delete">
+                                        <input type="submit" class="btn btn-warning" value="DELETE">
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         {%endfor%}
@@ -293,12 +298,17 @@
                     console.log(data_user.token_data[i].tipe_token);
                     var _html = "<td>"+data_user.token_data[i]['tipe_token']+"</td>\
                                 <td>"+data_user.token_data[i]['token']+"</td>\
-                                <td>"+data_user.token_data[i]['end_datetime']+"</td>"
+                                <td>"+data_user.token_data[i]['status_token']+"</td>\
+                                <td>"+data_user.token_data[i]['end_datetime']+"</td>\
+                                <td><a href=/deactive-token?id="+data_user.token_data[i]['pkey']+" class='badge bg-danger'>Deactive Token</a></td>"
                     $("#token-column"+i).html(_html);
                 }
             });
 
 
+        });
+        $('#myModal').on('hidden.bs.modal', function () {
+            location.reload();
         });
 
 

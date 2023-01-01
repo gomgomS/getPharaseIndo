@@ -71,6 +71,22 @@ class login_app:
                 ]
             }
         )
+
+        #check token active or not
+        data_status_token_all = []
+        token_data_get     = self.mgdDB.db_token_access.find(
+            {
+                "user_id": login_user['pkey']
+                # "status_content": 'expired'
+            },{"_id":0}
+        ) 
+        for temp_data in token_data_get:
+            data_status_token_all.append(temp_data['status_token'])
+        
+        if 'active' in data_status_token_all:
+            token_status = 'active'
+        else:
+            token_status = 'deactive'
        
         if login_user is not None:         
             self.webapp.logger.debug(login_user)     
@@ -80,6 +96,8 @@ class login_app:
                 session['username'] = login_user['name']
                 session['email']    = login_user['email']
                 session['role']     = login_user['role'] 
+                session['pkey']     = login_user['pkey'] 
+                # session['token_status'] = token_status
 
                 if session['role'] == 'admin':
                     response = {
@@ -99,6 +117,59 @@ class login_app:
                     "message_error":"Invalid username",
                     "number":"2"
                 }                              
+
+        return response
+    # end def
+
+    def process_by_token(self, params):        
+        response = helper.response_msg(
+            "CREATE_COMPANY_SUCCESS",
+            "CREATE COMPANY SUCCESS", {},
+            "0000"
+        )
+        login_user = None
+        data = params
+        self.webapp.logger.debug(data)
+        #start check existing user in db
+       
+        token_data_get     = self.mgdDB.db_token_access.find_one(
+            {
+                "token": data['token']
+                # "status_content": 'expired'
+            },{"_id":0}
+        ) 
+        self.webapp.logger.debug(token_data_get)
+
+        if token_data_get is not None:
+            if token_data_get['status_token'] == 'active':
+                login_user    = self.mgdDB.db_users.find_one(
+                    {
+                        "pkey"  : token_data_get['user_id']
+                    }
+                )
+                session['username'] = login_user['name']
+                session['email']    = login_user['email']
+                session['role']     = login_user['role'] 
+                session['pkey']     = login_user['pkey']
+                if session['role'] == 'admin':
+                    response = {
+                        'kboom' : 'UPLOAD_RAW'            
+                    } 
+                else:
+                    response = 'dashboard'
+            else:
+                response = {
+                "kboom" : "none",
+                "message_error":"Token sudah deactive hufu",
+                "number":"1"
+            }
+        else:
+            response = {
+                "kboom" : "none",
+                "message_error":"Token INVALID HEHE",
+                "number":"1"
+            }
+                            
 
         return response
     # end def

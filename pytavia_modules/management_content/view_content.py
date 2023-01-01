@@ -99,7 +99,7 @@ class view_content:
             launcher_content = 'manage_video/list_user.html'            
             manage_content_view     = self.mgdDB.db_users.find(
                 {
-                     "role": {"$not":{"$regex":"admin"}}
+                    #  "role": {"$not":{"$regex":"admin"}}
                     # "status_content": 'expired'
                 },{"_id":0,"password":0}
             ) 
@@ -120,8 +120,14 @@ class view_content:
             ALL_DATA     = list( data_token_all )
 
         else:
-            launcher_content = 'view_content.html'
-            ALL_DATA = []
+            launcher_content = 'manage_video/upload_raw.html'            
+            # manage_content_view     = self.mgdDB.db_content_management.find(
+            #     {
+            #         "status": {"$not":{"$regex":"DEACTIVE"}},
+            #         "status_content": 'expired'
+            #     }
+            # ) 
+            ALL_DATA     = []
 
         response = render_template(
             launcher_content,

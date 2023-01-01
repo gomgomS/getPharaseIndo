@@ -87,6 +87,18 @@ def api_hix():
     return 'ma brooo gloooo gl;oooo bro'
 # end def
 
+@app.route("/", methods=["GET"])
+def home():
+    return redirect(url_for("search"))
+    
+# end def
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('core/error_404.html')
+    
+# end dif
+
 @app.route("/nav", methods=["GET"])
 def nav_view():  
     params = request.args.to_dict()    
@@ -134,6 +146,23 @@ def register_view():
 def login_to_apps():  
     params                = sanitize.clean_html_dic(request.form.to_dict()) 
     response = login_app.login_app(app).process( params )
+    app.logger.debug(response)
+    # check if respnse is list or not    
+    
+    if "kboom" in response:  
+        res = list(response.keys())[0]   
+        if response[res] != 'none':           
+            return redirect(url_for('content_direct',kboom=response[res]))             
+        else:
+            return login_view_direct(info_error=response)
+    else:
+        return redirect(url_for('launch_dashboard'))       
+# end def
+
+@app.route("/login-by-token", methods=["POST"])
+def login_by_token():  
+    params                = sanitize.clean_html_dic(request.form.to_dict()) 
+    response = login_app.login_app(app).process_by_token( params )
     app.logger.debug(response)
     # check if respnse is list or not    
     
@@ -211,6 +240,13 @@ def generate_token_user():
     res = list(response.keys())[0]  #take first key in list     
     return redirect(url_for('content_direct',kboom=response[res]))      
 # end def
+
+@app.route("/deactive-token", methods=["GET"])
+def deactive_token_data():  
+    params = request.args.to_dict()    
+    response = generate_token.generate_token(app)._deactive( params )
+    res = list(response.keys())[0]  #take first key in list     
+    return redirect(url_for('content_direct',kboom=response[res])) 
 
 # End Generate Token
 

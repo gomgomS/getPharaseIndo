@@ -51,16 +51,32 @@ class dashboard:
         username = session.get('username')
         email    = session.get('email')
         role     = session.get('role')
-        # manage_content_view     = self.mgdDB.db_content_management.find(
-        #     {
-        #         "status": {"$not":{"$regex":"DEACTIVE"}},
-        #         "status_content": 'live'
-        #     }
-        # )   
-        # ALL_DATA     = list( manage_content_view )
+
+        data_user    = self.mgdDB.db_users.find_one(
+            {
+                'name' : username,
+                'email' : email
+                #  "role": {"$not":{"$regex":"admin"}}
+                # "status_content": 'expired'
+            },{"_id":0,"password":0}
+        ) 
+        
+        data_token_all = []
+        
+        token_data_get     = self.mgdDB.db_token_access.find(
+            {
+                "user_id": data_user['pkey']
+                # "status_content": 'expired'
+            },{"_id":0,"user_id":0,"rec_timestamp":0,'ipkey':0,'pkey':0}
+        ) 
+        self.webapp.logger.debug(token_data_get)
+        data_user['token_data'] = list(token_data_get)
+
+        ALL_DATA     = data_user 
             
         response = render_template(
             launcher_content,
+            ALL_DATA = ALL_DATA,
             name = username,
             email = email,
             role = role,

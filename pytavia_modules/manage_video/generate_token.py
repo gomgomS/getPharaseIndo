@@ -83,7 +83,28 @@ class generate_token:
      
         
         response = {
-            'kboom' : 'LIST_VIDEO'
+            'kboom' : 'LIST_USER'
+        }
+
+        return response
+    # end def    
+
+    def _deactive(self, params):        
+        response = helper.response_msg(
+            "CREATE_COMPANY_SUCCESS",
+            "CREATE COMPANY SUCCESS", {},
+            "0000"
+        )  
+      
+        self.webapp.logger.debug(params)
+        
+        x = self.mgdDB.db_token_access.update_one(
+            { "pkey"          : params['id'] },
+            {'$set':  {"status_token":'deactive'}  }
+        )     
+        
+        response = {
+            'kboom' : 'LIST_USER'
         }
 
         return response
