@@ -36,15 +36,15 @@
                 <a type="button" href="/dashboard" class="btn btn-success">Dashboard</a>
                     <i class="fas fa-book ml-1 white-text"></i>
                 </a>
-                <a type="button" href="/register" class="btn btn-outline-success waves-effect"> jika belum Daftar, daftar disini</a>
+                <a type="button" href="/register" class="btn btn-outline-success waves-effect"> Tapi harus Daftar dulu disini</a>
             </div>
             <div class="align-items-center">
 
                 <p class="pt-3 mx-4">jika kamu sudah punya token yang aktif, silahkan input di bawah.
-                    <strong>jika token lupa, silahkan lewat <a href="/login">login disini</a> </strong>.</p>
+                    <!-- <strong>jika token lupa, silahkan lewat <a href="/login">login disini</a> </strong>.</p> -->
     
                 <form action="/login-by-token" method="POST">
-                    <input class="m-0 p-0" name="token" id="token" >            
+                    <input class="m-0 p-0" name="token" id="token" placeholder="dpfLPFHEVUW9syJ6hGjXfMo2KxUEMgZWVol1v1SrlUUYb5a9UAS!nxKdsdsdere4iHE">            
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
@@ -77,7 +77,7 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong">
             <span>
-                <span>ngomong</span>
+                <span></span>
                 <a class="navbar-brand" href="#">
                     <img src="../static/assets/img/ngomg-logo.png" class="rounded-circle" height="50" alt="Avatar"
                         loading="lazy" />
@@ -95,15 +95,22 @@
                         {% if username is none %}
                         <a class="nav-link" href="/login">Login <span class="sr-only">(current)</span></a>
                         {% else %}
-                        <a class="nav-link" href="/dashboard">{{username}}[{{token_status}}]<span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="/dashboard">Dashboard<span class="sr-only">(current)</span></a>
                         {% endif %}
                     </li>
                     <li class="nav-item">
                         <a aria-readonly="true" class="nav-link" href="#">youtube(coming soon)</a>
                     </li>
+                    <li>
+                        {% if token_status == 'active' %}
+                        <span class="nav-link" style="color: white;" >yeahh 🎊{{username}} your token is {{token_status}}<span class="sr-only">(current)</span></span>       
+                        {% elif token_status == 'deactive'%}
+                        <a class="nav-link" ><span class="sr-only">(current)</span></a>
+                        {% endif %}
+                    </li>
                 </ul>
             </div>
-            <span> Terdapat <span>{{total_all_data}}</span> Kalimat Keseluruhan</span>
+            <h3 style="font-weight: bold;"> Terdapat <span>{{total_all_data}}</span> Kalimat Keseluruhan</h3>
         </nav>
     </div>
     
@@ -185,7 +192,7 @@
             key++;
             dump_numb ++;            
             
-            if(dump_numb == 2 && status_token != 'active'){
+            if(dump_numb == 5 && status_token != 'active'){
                 $("#modalSorry").modal({backdrop: 'static', keyboard: false});
                
             }

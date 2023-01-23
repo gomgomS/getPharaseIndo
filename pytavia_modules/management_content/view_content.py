@@ -12,6 +12,9 @@ import requests
 import json
 import hashlib
 
+import os
+import glob
+
 sys.path.append("pytavia_core")
 sys.path.append("pytavia_settings")
 sys.path.append("pytavia_stdlib")
@@ -23,6 +26,7 @@ sys.path.append("pytavia_modules")
 from flask             import render_template_string
 from flask             import render_template
 from flask             import request
+from flask             import redirect
 
 from pytavia_stdlib    import idgen
 from pytavia_stdlib    import utils
@@ -119,6 +123,43 @@ class view_content:
             
             ALL_DATA     = list( data_token_all )
 
+        elif content == 'DELETE_FILE_UPLOAD_FOLDER':
+            folder_path = config.G_UPLOAD_PATH
+            for f in os.listdir(folder_path):
+                 os.remove(os.path.join(folder_path, f))
+
+            return 'success delete file in upload'
+
+        elif content == 'DELETE_EVERY_SCRIPT_DONT_HAVE_VIDEO':
+            folder_path = config.G_STORAGE_PATH
+            data_storage = []
+            for f in os.listdir(folder_path):
+                data_storage.append(f)
+
+            
+            scripts_rec = self.mgdDB.db_scripts.find({},{'_id':0,'id_upload':0,'title_movie':0,'startTime':0,'endTime':0,'ref':0})
+
+            i = 0
+            # REMOVE DATA FROM SCRIPTS
+            arr_scripts_rec = []
+            for scr in scripts_rec:
+                if scr['scene_name'] not in data_storage:
+                    i += 1
+                    delete_result_x = self.mgdDB.db_scripts.delete_one({'scene_name':scr['scene_name']})
+
+                arr_scripts_rec.append(scr['scene_name'])
+
+            y = 0
+            # REMOVE VIDEO.MKV FROM STORAGE
+            for data in data_storage:
+                if data not in arr_scripts_rec:
+                     y += 1
+                     if data != 'loading.mkv':
+                        os.remove(os.path.join(folder_path, data))
+
+
+
+            return [data_storage,arr_scripts_rec,i,y]
         else:
             launcher_content = 'manage_video/upload_raw.html'            
             # manage_content_view     = self.mgdDB.db_content_management.find(

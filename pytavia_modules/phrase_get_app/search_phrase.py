@@ -24,6 +24,7 @@ from flask             import render_template_string
 from flask             import render_template
 from flask             import request
 from flask             import session
+from flask             import redirect
 
 from pytavia_stdlib    import idgen
 from pytavia_stdlib    import utils
@@ -64,13 +65,58 @@ class search_phrase:
         if token_data_get is not None: 
             token_status = token_data_get['status_token']
         else:
-            token_status = 'deactive'
+               token_status = 'deactive'
      
+
+        pipeline = [
+            {"$group": {"_id": "$ref", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}},
+            {"$limit": 5}
+        ]
+        pipelinez = [
+        {
+                "$project": {
+                    "words": {
+                        "$split": ["$ref", " "]
+                    }
+                }
+            },
+            {
+                "$unwind": "$words"
+            },
+            {
+                "$group": {
+                    "_id": "$words",
+                    "count": { "$sum": 3 }
+                }
+            },
+            {
+                "$sort": { "count": -1 }
+            },
+            {
+                "$limit": 10
+            }
+        ]
+
+        result        = self.mgdDB.db_scripts.aggregate(pipelinez)
+        result        = list(result)
+        random_number = random.randint(0, 9)
+        self.webapp.logger.debug('------------------------------------------')
+        random_subject = result[random_number]['_id']
+        
+        # most_common_sentence = result.next()
+
+        self.webapp.logger.debug(list(result))
+  
+
+        
+        self.webapp.logger.debug(random_number,random_subject)
 
         total_all_data = self.mgdDB.db_scripts.count_documents({})
         if token_status == 'active':
             # condition if you PAY AND SUBSCRIBE
             if params.get('search-keyword') is None:
+                return redirect("http://127.0.0.1:4999/search-script?search-keyword=%20"+random_subject+"%20&search-figure-keyword=")
                 manage_content_view  = self.mgdDB.db_scripts.find({},{'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1})
             # else:
             #     self.webapp.logger.debug( "BELUM" )
@@ -109,6 +155,7 @@ class search_phrase:
         elif token_status is None or token_status == 'deactive':
             # condition if you not pay
             if params.get('search-keyword') is None:
+                return redirect("http://127.0.0.1:4999/search-script?search-keyword=%20"+random_subject+"%20&search-figure-keyword=")
                 manage_content_view  = self.mgdDB.db_scripts.find({},{'_id':0,'title_movie':1,'scene_name':1,'startTime':1,'endTime':1,'ref':1}).limit(5)
             # else:
             #     self.webapp.logger.debug( "BELUM" )
